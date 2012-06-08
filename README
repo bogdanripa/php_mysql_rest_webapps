@@ -1,0 +1,5 @@
+HOW TO USE
+
+1. Update the api/v1/conn.php file to match your MySQL connection prefs
+2. Go to ....../api/test.html in your browser
+3. Click on "Show all webapps". If this shows all your MySQL databases, it works.
