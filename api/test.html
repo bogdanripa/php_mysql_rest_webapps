@@ -1,0 +1,161 @@
+<html>
+	<head>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+		<script type="text/javascript" src="jquery.form.js"></script>
+		
+		<script>
+			$(document).ready(function() {
+				$('.lasturl').change(function() {
+					var formAction = $(this).closest('form').attr('action');
+					formAction = formAction.replace(/\/[^\/]*$/, '/' + $(this).val());
+					
+					$(this).closest('form').attr('action', formAction);
+				});
+				
+				$('.beforelasturl').change(function() {
+					var formAction = $(this).closest('form').attr('action');
+					formAction = formAction.replace(/\/[^\/]*(\/[^\/]*)$/, '/' + $(this).val() + '$1');
+					
+					$(this).closest('form').attr('action', formAction);
+				});
+				
+				$('.for').change(function() {
+					var formEl = $("#" + $(this).data('for'));
+					formEl.attr('name', $(this).val());
+				});
+				
+	
+		        $('form').ajaxForm({
+		            target: '#response',
+		            error: function(response, status, err){
+		            	$('#response').html('Error: ' + response.status);
+		            }
+		        });
+		        
+			});
+			
+			
+		</script>
+		<style>
+			#inputs {
+				width:66%;
+				float: left;
+			}
+			
+			#target {
+				width:33%;
+				right: 0;
+				height: 1000px;
+				position: absolute;
+				
+				border: 1px solid #AAF;
+				background-color: #DDF;
+			}
+			form {
+				padding: 5px 0;
+				margin: 0;
+			}
+			input {
+				width: 5em;
+			}
+
+		</style>
+	</head>
+	<body>
+		<div id="inputs">
+	
+			<form action="v1/admin/webapps" method="GET" target="target" id="showAllWebApps">
+				Show all webapps
+				<input type="submit" />
+			</form>
+		
+			<form action="v1/admin/webapps" method="POST" target="target" id="createWebApp">
+				Create a new webapp called <input type="text" name="name" value="cars" />
+				<input type="submit" />
+			</form>
+			
+			<form action="v1/admin/webapps/cars" method="GET" target="target">
+				Show <input type="text" value="cars" class="lasturl" /> structure
+				<input type="submit" />
+			</form>
+			
+			<form action="v1/admin/webapps/cars" method="DELETE" target="target">
+				Delete the webapp called <input type="text" class="lasturl" value="cars"/>
+				<input type="submit" />
+			</form>
+	
+			<form action="v1/admin/webapps/cars" method="POST" target="target">
+				For the <input type="text" class="lasturl" value="cars"/> webapp, add a new fields called <input type="text" name="name" value="wheels"/> of type 
+					<select name="type">
+						<option value="int" selected="selected">int</option>
+						<option value="text">text</option>
+					</select>
+				<input type="submit" />
+			</form>
+	
+			<form action="v1/admin/webapps/cars/wheels" method="DELETE" target="target">
+				For the <input type="text" class="beforelasturl" value="cars"/> webapp, drop the <input type="text" name="name" value="wheels" class="lasturl"/> field
+				<input type="submit" />
+			</form>
+	
+			<hr />
+		
+			<form action="v1/webapps/cars" method="GET" target="target">
+				Show all webapp items for <input type="text" class="lasturl" value="cars" />
+				<input type="submit" />
+			</form>
+	
+			<form action="v1/webapps/cars" method="GET" target="target">
+				Show all webapp items for 
+					<input type="text" class="lasturl" value="cars" />
+				, where 
+					<input type="text" class="for" data-for="wafvalue" value="wheels" />
+				= 
+					<input type="text" name="wheels" id="wafvalue" value=">1" />
+				<input type="submit" />
+			</form>
+	
+			<form action="v1/webapps/cars/1" method="GET" target="target">
+				Show the webapp item for <input type="text" class="beforelasturl" value="cars" /> that has the id <input type="text" class="lasturl" value="1"/>
+				<input type="submit" />
+			</form>
+			
+			<hr />
+	
+		
+			<form action="v1/webapps/cars" method="POST" target="target">
+				Width
+					<input type="text" class="lasturl" value="cars"/>
+				, add a webapp item where
+					<input type="text" class="for" data-for="wafvalue1" value="wheels" />
+				is
+					<input type="text" name="wheels" id="wafvalue1" value="4" />
+				
+				<input type="submit" />
+			</form>
+			
+			<form action="v1/webapps/cars/1" method="PUT" target="target">
+				Width
+					<input type="text" class="beforelasturl" value="cars"/>
+				, update the webapp item that has the id
+					<input type="text" class="lasturl" value="1"/>
+				 with
+				 	<input type="text" class="for" data-for="wafvalue2" value="wheels" />
+				 =
+				 <input type="text" id="wafvalue2" name="wheels" value="-1" />
+				<input type="submit" />
+			</form>
+	
+			<form action="v1/webapps/cars/1" method="DELETE" target="target">
+				Width
+					<input type="text" class="beforelasturl" value="cars"/>
+				, delete the webapp item that has the id
+					<input type="text" class="lasturl" value="1"/>
+				<input type="submit" />
+			</form>
+			
+			<hr />
+		</div>
+		<div id="target"><pre id="response"></pre></div>		
+	</body>
+</html>
